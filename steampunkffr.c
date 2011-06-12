@@ -2175,16 +2175,16 @@ bool tyl(character_t *figur) {
 
 // Implementation: fightround
 bool fightround(character_t *attacker, character_t *defender, void (*pointtoescape)()) {
-	int textdexterity[2];
+	int testdexterity[2];
 	bool lucktest = false;
 	bool reallucky;
 	int shieldbonus = 0;
 
-	textdexterity[0] = attacker->dexterity + dice(6) + dice(6) + attackbonus + paralized;
-	textdexterity[1] = defender->dexterity + dice(6) + dice(6);
+	testdexterity[0] = attacker->dexterity + dice(6) + dice(6) + attackbonus + paralized;
+	testdexterity[1] = defender->dexterity + dice(6) + dice(6);
 	if(invisible) // in case,  you are invisible
-		textdexterity[0] += 2;
-	if(textdexterity[0] == textdexterity[1])
+		testdexterity[0] += 2;
+	if(testdexterity[0] == testdexterity[1])
 		return true; // on equal results - it's a not hit
 	actual_values(attacker);
 	actual_values(defender);
@@ -2200,7 +2200,7 @@ bool fightround(character_t *attacker, character_t *defender, void (*pointtoesca
 		}
 	}
 	// Here starts the real fightpart
-	if(textdexterity[0] > textdexterity[1]) { // The player wins
+	if(testdexterity[0] > testdexterity[1]) { // The player wins
 		if((onlysilverhits == true) && (silverweapon == false)) // silver immune monster
 			return true; // don't get hits
 		if(invisible) // Invisible player
@@ -2219,7 +2219,7 @@ bool fightround(character_t *attacker, character_t *defender, void (*pointtoesca
 		defender->strength -= 2;
 		return true; // Lucky,  no hit
 	}
-	else if (textdexterity[0] < textdexterity[1]) { // The player loses this round
+	else if (testdexterity[0] < testdexterity[1]) { // The player loses this round
 		if((object[schild] >= 0) && (dice(6) == 6)) // Luckily,  the shield get's the hit
 			shieldbonus = 1;
 		if(invisible) // The bonus for invisibility
