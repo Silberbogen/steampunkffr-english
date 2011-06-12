@@ -1,0 +1,129 @@
+Dear reader,
+
+as you might already knowledge, this little piece of software is written in German. It is an engine for writing interactive novels, that will lead the reader not only through a book, but through an interactive book. The engine is not internationalized, because I believe, a good author will like to work mostly in his natural language, so please forgive me, if you awaited an english documentation or english comments on the sourcecode.
+Because I use standard German, there should be enough translation units on the internet.
+
+Here is a short Howto - what to do with the code.
+
+The struct character_t is of cause the structure to implement player and non player (npc) characters - for playing a story.
+
+The enumeration list of objektsynonyme (objectsynonyms) is an integer list of all the variables, that are stored in the game the variable array of objekt (object), while objektname (objectname) does provide the strings to name the objects in an inventory list (or whatever else function you want to name the objects). Last in the enumeration list of objektsynonyme is the maximalobjekt (maximumobject) - that you need to define the number of objekt and objektname.
+
+Different variables of the int or bool type, following are implemented separately, based on what is needed for a game. Don't forget to save and load them in the specific routines - or the gameplay could break later.
+
+The raum variable takes the number of a given room (in German Raum). This is needed, for knowing from which room a player comes (to implement walking through a labyrinth with intelligent direction reactions) and for the ability so save/load the place, where the player actually is.
+
+
+Following now is a list of functions
+
+int wuerfel(unsigned int);
+This function implements a dice (german Würfel/wuerfel). The number you give as parameter is number of sides, the dice has.
+So calling wuerfel(6) imitates a 6 sided dice, while wuerfel(20) imitates a twenty sided, wuerfel(100) a hundred side dice. The limitation is you're systems maximum unsigned int.
+
+
+bool tdg(charackter_t *);
+This function implements a test your luck (german TesteDeinGlück). Because it manipulates the luck of a character while testing it, the pointer to the character must be given to the function. Calling it reduces after the throw the luck by 1 point.
+
+
+bool kampfrunde(charakter_t *, charakter_t *, void (*)());
+This function implements a fightround (in german Kampfrunde) between to characters. The parameter void (*)() can point to NULL or to a room, like raum100. If something else like NULL is given, the character has in every battle round the choice - to flee!
+The return parameter is important to tell you, if the 1st character was hit or not in the round. Interesting for implementing poisoning - or other features.
+
+
+bool kamp(charakter_t *, charakter_t *, int, bool, void(*)());
+This is the main implementation for battles (in german Kampf). The battles can be between a character and a group of foes. The int gets the number of enemies.
+
+
+void momentane_werte(charakter_t *);
+This function prints the actual stats of a given character.
+
+
+char taste(void);
+A function that returns a pressed key.
+
+
+void testausgabe(char *);
+This function is implemented to do all the textoutput! Don't use any other outputroutine, to not break you're program.
+
+
+void weiter(void);
+A function, you could translate weiter in English into "more" or "go on".
+
+
+void auswahl(char *, int, void (*)() ... 6 times);
+The function would be translated as "choice" - and that's it. The string is the choice, you give to the player. The int takes the number of choices for functions, that are called (normally raumxyz) or NULL.
+
+
+void versuchedeinglueck(void (*)(), void(*)());
+This function implements a probeyourluck situation. The two parameters are the functions that are called if you have luck (1st one) or not (2nd one).
+
+
+void versuchedeinegewandheit(void (*)(), void (*)());
+This function implements a probeyourdexterity situation.
+
+
+int waehle(char *, int);
+The translation of waehle is "choose". You give it a string full of options from 1 to the number, you say is maximum.
+
+
+void flucht(void (*)());
+This function implements escapes, with the function (normally a raumxyz function), which is called, if the escape is a success. Because an escape reduces characters stats, it can be deadly for the player!
+
+
+void mahlzeit(void);
+This function implements having a meal. A way, to restore a characters stats partially.
+
+
+void gewandheitstrank_trinken();
+This function implements, that a character can drink a dexteritydrink and restore partially dexterity (if he has one in the inventory).
+
+
+void staerketrank_trinken();
+The same function for strength.
+
+
+void glueckstrank_trinken();
+The same function for luck. Luck is special. It add's 1 to the maximum number possible, constantly.
+
+
+void speichern(void);
+This is the save function. Please adjust it to all variables, you use in the game.
+
+
+void laden(void);
+This is the load function. Please adjust it to all variables, you use in the game.
+
+
+// The game modules
+I have implemented normally 1 room per ortxyz() function.
+vorwort(); is the place, where the story starts, and the player could learn something - or some parameters for the gameplay could be adjusted, before the player starts.
+
+ort1(); ort2(); ... ort400(); are up to 400 possible rooms, I have pre-setup for the game. You can of cause reduce or grow it, based on the needs you have. 
+If you want to make it easier for you - use every room as a real room in you're design. Based on intelligent cases like if(objekt[objektname] >= 1) - you can change the situation, based if the character owns an object. Or if you ask if(raum == 20) - you can check, enters the room from room number 20 (to react on what the player could see, based on the location where he comes from.
+
+The rooms of cause give you the option - to setup riddles, puzzles, subgames, etc.
+I did that already in a game-novel, that I have finished.
+
+
+// raumptr
+void (*raumptr[roommaximum+1] (void)
+This list is needed for save/load - and other functions. Every roomfunction, you have, must be in this list. Don't mix up the numbers - or you're gameplay goes wild!!!
+
+
+// Last hint
+I want to give you a list hint: If you don't like to use ncurses - there are only the functions of textausgabe and waehle - which you need to implement the way you want. You could simply, by only changing that two functions - implement this engine to QT libraries or other ones. Whatever you whish. 
+Of cause you have to change the initialisations in the main routine - at the moment, they are for initializing ncurses and for setting up random numbers, as good as I was able to set them up.
+
+
+// Bogus routine.
+My software is at the moment possible to run on any machine. But - it can't yet find out, if there is already a savegame or not.
+So - you must implement a routine, to check if there is such a file - based on you're local OS setup. If there is a standard C way, to do that - I've simply missed it ^.^
+Hey, I'm human, I make errors!
+
+
+// Some wishes
+Feel free to fork me, if you like!
+
+
+Sascha Biermanns
+
